@@ -6,8 +6,8 @@ import (
 
 	"fmt"
 
-	"github.com/VG-Tech-Dojo/vg-1day-2018/original/env"
-	"github.com/VG-Tech-Dojo/vg-1day-2018/original/model"
+	"github.com/VG-Tech-Dojo/vg-1day-2018-06-02/original/env"
+	"github.com/VG-Tech-Dojo/vg-1day-2018-06-02/original/model"
 	"net/url"
 )
 
