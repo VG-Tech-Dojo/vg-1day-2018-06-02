@@ -8,10 +8,10 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/VG-Tech-Dojo/vg-1day-2018/original/bot"
-	"github.com/VG-Tech-Dojo/vg-1day-2018/original/controller"
-	"github.com/VG-Tech-Dojo/vg-1day-2018/original/db"
-	"github.com/VG-Tech-Dojo/vg-1day-2018/original/model"
+	"github.com/VG-Tech-Dojo/vg-1day-2018-06-02/original/bot"
+	"github.com/VG-Tech-Dojo/vg-1day-2018-06-02/original/controller"
+	"github.com/VG-Tech-Dojo/vg-1day-2018-06-02/original/db"
+	"github.com/VG-Tech-Dojo/vg-1day-2018-06-02/original/model"
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
 )

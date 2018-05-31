@@ -1,9 +1,9 @@
-vg-1day-2018
+vg-1day-2018-06-02
 ---
 
 ## 概要
 
-vg-1day-2018 で使う予定のサンプルアプリです。
+vg-1day-2018-06-02 で使う予定のサンプルアプリです。
 
 サーバーサイドはgolang、クライアントサイドはHTML, Vue.jsで実装されています。
 
@@ -13,7 +13,7 @@ vg-1day-2018 で使う予定のサンプルアプリです。
 
 ```
 $ pwd
-/Users/s-sasamoto/src/github.com/VG-Tech-Dojo/vg-1day-2018
+/Users/s-sasamoto/src/github.com/VG-Tech-Dojo/vg-1day-2018-06-02
 $ make docker/build
 
 # xxx は 設定した nickname
@@ -27,11 +27,11 @@ $ make docker/run/xxx
 
 ```
 $ pwd
-/Users/s-sasamoto/src/github.com/VG-Tech-Dojo/vg-1day-2018
+/Users/s-sasamoto/src/github.com/VG-Tech-Dojo/vg-1day-2018-06-02
 $ vagrant up
 $ vagrant ssh
 
-$ cd go/src/github.com/VG-Tech-Dojo/vg-1day-2018
+$ cd go/src/github.com/VG-Tech-Dojo/vg-1day-2018-06-02
 ```
 
 ## 参考リンク
