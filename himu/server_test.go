@@ -144,7 +144,7 @@ func TestAPIが新しいメッセージを作成する(t *testing.T) {
 		t.Fatalf("failed to read http response, %s", err)
 	}
 
-	expected := fmt.Sprintf(`{"error":null,"result":{"id":4,"body":"%s","username":""}}`, tm)
+	expected := fmt.Sprintf(`{"error":null,"result":{"id":4,"body":"%s","username":"ななしさん"}}`, tm)
 	// http responseの末尾に改行が含まれるので除去して比較します
 	actual := strings.TrimRight(string(b), "\n")
 	if actual != expected {
@@ -173,7 +173,7 @@ func TestHelloWorldBotが反応する(t *testing.T) {
 		t.Fatalf("failed to read http response, %s", err)
 	}
 
-	expected := `{"error":null,"result":{"id":6,"body":"hello, world!","username":""}}`
+	expected := `{"error":null,"result":{"id":6,"body":"hello, world!","username":"ななしさん"}}`
 	// http responseの末尾に改行が含まれるので除去して比較します
 	actual := strings.TrimRight(string(b), "\n")
 	if actual != expected {
