@@ -204,4 +204,18 @@ func TestAPIが指定したIDのメッセージを更新する(t *testing.T) {
 	}
 }
 
-func TestAPIが指定したIDのメッセージを削除する(t *testing.T) {}
+func TestAPIが指定したIDのメッセージを削除する(t *testing.T) {
+	req, err := http.NewRequest(http.MethodDelete, tsURL+"/api/messages/1", nil)
+	if err != nil {
+		panic(err)
+	}
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		t.Fatalf("failed to send request: %s", err)
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		t.Fatalf("response status code expected %d, but %d", http.StatusOK, res.StatusCode)
+	}
+}
