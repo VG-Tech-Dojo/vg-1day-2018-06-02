@@ -9,6 +9,7 @@ type Message struct {
 	ID   int64  `json:"id"`
 	Body string `json:"body"`
 	// Tutorial 1-1. ユーザー名を表示しよう
+	Username string `json:"username"`
 }
 
 // MessagesAll は全てのメッセージを返します
