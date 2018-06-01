@@ -37,7 +37,8 @@ type (
 // Process は"hello, world!"というbodyがセットされたメッセージのポインタを返します
 func (p *HelloWorldProcessor) Process(msgIn *model.Message) (*model.Message, error) {
 	return &model.Message{
-		Body: msgIn.Body + ", world!",
+		Body:     msgIn.Body + ", world!",
+		Username: "bot",
 	}, nil
 }
 
@@ -53,7 +54,8 @@ func (p *OmikujiProcessor) Process(msgIn *model.Message) (*model.Message, error)
 	}
 	result := fortunes[randIntn(len(fortunes))]
 	return &model.Message{
-		Body: result,
+		Body:     result,
+		Username: "占い師",
 	}, nil
 }
 
@@ -78,7 +80,8 @@ func (p *KeywordProcessor) Process(msgIn *model.Message) (*model.Message, error)
 	}
 
 	return &model.Message{
-		Body: "キーワード：" + strings.Join(keywords, ", "),
+		Body:     "キーワード：" + strings.Join(keywords, ", "),
+		Username: "絶対にキーワード抽出マン",
 	}, nil
 }
 

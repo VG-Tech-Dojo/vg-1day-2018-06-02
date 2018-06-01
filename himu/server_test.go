@@ -173,7 +173,7 @@ func TestHelloWorldBotが反応する(t *testing.T) {
 		t.Fatalf("failed to read http response, %s", err)
 	}
 
-	expected := `{"error":null,"result":{"id":6,"body":"hello, world!","username":"ななしさん"}}`
+	expected := `{"error":null,"result":{"id":6,"body":"hello, world!","username":"bot"}}`
 	// http responseの末尾に改行が含まれるので除去して比較します
 	actual := strings.TrimRight(string(b), "\n")
 	if actual != expected {
