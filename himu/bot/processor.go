@@ -6,9 +6,10 @@ import (
 
 	"fmt"
 
+	"net/url"
+
 	"github.com/VG-Tech-Dojo/vg-1day-2018-06-02/himu/env"
 	"github.com/VG-Tech-Dojo/vg-1day-2018-06-02/himu/model"
-	"net/url"
 )
 
 const (
@@ -29,6 +30,8 @@ type (
 
 	// KeywordProcessor はメッセージ本文からキーワードを抽出するprocessorの構造体です
 	KeywordProcessor struct{}
+
+	GachaProcessor struct{}
 )
 
 // Process は"hello, world!"というbodyがセットされたメッセージのポインタを返します
@@ -76,5 +79,19 @@ func (p *KeywordProcessor) Process(msgIn *model.Message) (*model.Message, error)
 
 	return &model.Message{
 		Body: "キーワード：" + strings.Join(keywords, ", "),
+	}, nil
+}
+
+func (p *GachaProcessor) Process(msgIn *model.Message) (*model.Message, error) {
+	gacha := []string{
+		"SSレア",
+		"Sレア",
+		"レア",
+		"ノーマル",
+	}
+	result := gacha[randIntn(len(gacha))]
+	return &model.Message{
+		Body:     result,
+		Username: "gatcha bot",
 	}, nil
 }
