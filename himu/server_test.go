@@ -181,6 +181,27 @@ func TestHelloWorldBotが反応する(t *testing.T) {
 	}
 }
 
-func TestAPIが指定したIDのメッセージを更新する(t *testing.T) {}
+func TestAPIが指定したIDのメッセージを更新する(t *testing.T) {
+	req, err := http.NewRequest(http.MethodPut, tsURL+"/api/messages/1", bytes.NewBuffer([]byte(`{"body":"testmessage"}`)))
+	if err != nil {
+		panic(err)
+	}
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		t.Fatalf("failed to send request: %s", err)
+	}
+	defer res.Body.Close()
+
+	b, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		t.Fatalf("failed to read http response, %s", err)
+	}
+
+	expected := `{"error":null,"result":{"id":1,"body":"testmessage","username":"sampleuser"}}`
+	actual := strings.TrimRight(string(b), "\n")
+	if actual != expected {
+		t.Fatalf("response body expected %s, but %s", expected, string(b))
+	}
+}
 
 func TestAPIが指定したIDのメッセージを削除する(t *testing.T) {}
