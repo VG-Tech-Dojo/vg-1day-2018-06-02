@@ -62,6 +62,18 @@ func UsernameByID(db *sql.DB, id string) (*Message, error) {
 	return m, nil
 }
 
+// UsernameByID Get username by id.
+func UsernameByID(db *sql.DB, id string) (*Message, error) {
+	m := &Message{}
+
+	// Tutorial 1-2. ユーザー名を表示しよう
+	if err := db.QueryRow(`select id, username from message where id = ?`, id).Scan(&m.ID, &m.Username); err != nil {
+		return nil, err
+	}
+
+	return m, nil
+}
+
 // Insert はmessageテーブルに新規データを1件追加します
 func (m *Message) Insert(db *sql.DB) (*Message, error) {
 	// Tutorial 1-2. ユーザー名を追加しよう
