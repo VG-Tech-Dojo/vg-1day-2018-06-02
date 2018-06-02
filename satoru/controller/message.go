@@ -3,6 +3,7 @@ package controller
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/VG-Tech-Dojo/vg-1day-2018-06-02/satoru/httputil"
@@ -98,7 +99,20 @@ func (m *Message) Create(c *gin.Context) {
 // UpdateByID は...
 func (m *Message) UpdateByID(c *gin.Context) {
 	// Mission 1-1. メッセージを編集しよう
-	// ...
+	var msg model.Message
+
+	if c.Request.ContentLength == 0 {
+		resp := httputil.NewErrorResponse(errors.New("body is missing"))
+		c.JSON(http.StatusBadRequest, resp)
+		return
+	}
+
+	if err := c.BindJSON(&msg); err != nil {
+		resp := httputil.NewErrorResponse(err)
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+	fmt.Println("メッセええええええええええじ" + msg.Body)
 	c.JSON(http.StatusCreated, gin.H{})
 }
 
