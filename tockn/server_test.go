@@ -8,7 +8,6 @@ import (
 	"os"
 	"strings"
 	"testing"
-	"time"
 )
 
 const (
@@ -67,8 +66,8 @@ func TestAPIがpingに応答する(t *testing.T) {
 	}
 }
 
-func TestAPIがメッセージを全て返す(t *testing.T) {
-	resp, err := http.Get(tsURL + "/api/messages")
+func TestAPIがルーム１のメッセージを全て返す(t *testing.T) {
+	resp, err := http.Get(tsURL + "/api/rooms/1/messages")
 	if err != nil {
 		t.Fatalf("failed to get response: %s", err)
 	}
@@ -87,7 +86,7 @@ func TestAPIがメッセージを全て返す(t *testing.T) {
 		t.Fatalf("failed to read http response, %s", err)
 	}
 
-	expected := `{"error":null,"result":[{"id":1,"body":"hoge","username":"sampleuser"},{"id":2,"body":"fuga","username":"sampleuser"},{"id":3,"body":"piyo","username":"sampleuser"}]}`
+	expected := `{"error":null,"result":[{"id":1,"body":"hoge","username":"sampleuser","room_id":1},{"id":2,"body":"fuga","username":"sampleuser","room_id":1},{"id":3,"body":"piyo","username":"sampleuser","room_id":1}]}`
 	// http responseの末尾に改行が含まれるので除去して比較します
 	actual := strings.TrimRight(string(b), "\n")
 	if actual != expected {
@@ -95,8 +94,8 @@ func TestAPIがメッセージを全て返す(t *testing.T) {
 	}
 }
 
-func TestAPIが指定したIDのメッセージを返す(t *testing.T) {
-	resp, err := http.Get(tsURL + "/api/messages/1")
+func TestAPIが指定した部屋の指定したIDのメッセージを返す(t *testing.T) {
+	resp, err := http.Get(tsURL + "/api/rooms/1/messages/1")
 	if err != nil {
 		t.Fatalf("failed to get response: %s", err)
 	}
@@ -115,7 +114,7 @@ func TestAPIが指定したIDのメッセージを返す(t *testing.T) {
 		t.Fatalf("failed to read http response, %s", err)
 	}
 
-	expected := `{"error":null,"result":{"id":1,"body":"hoge","username":"sampleuser"}}`
+	expected := `{"error":null,"result":{"id":1,"body":"hoge","username":"sampleuser","room_id":1}}`
 	// http responseの末尾に改行が含まれるので除去して比較します
 	actual := strings.TrimRight(string(b), "\n")
 	if actual != expected {
@@ -123,9 +122,9 @@ func TestAPIが指定したIDのメッセージを返す(t *testing.T) {
 	}
 }
 
-func TestAPIが新しいメッセージを作成する(t *testing.T) {
+func TestAPIがルーム１に新しいメッセージを作成する(t *testing.T) {
 	tm := "testmessage"
-	resp, err := http.Post(tsURL+"/api/messages", "application/json", bytes.NewBuffer([]byte(fmt.Sprintf(`{"body": "%s"}`, tm))))
+	resp, err := http.Post(tsURL+"/api/rooms/1/messages", "application/json", bytes.NewBuffer([]byte(fmt.Sprintf(`{"body": "%s","room_id":1}`, tm))))
 	if err != nil {
 		t.Fatalf("failed to post request: %s", err)
 	}
@@ -144,7 +143,7 @@ func TestAPIが新しいメッセージを作成する(t *testing.T) {
 		t.Fatalf("failed to read http response, %s", err)
 	}
 
-	expected := fmt.Sprintf(`{"error":null,"result":{"id":4,"body":"%s","username":"anonymous"}}`, tm)
+	expected := fmt.Sprintf(`{"error":null,"result":{"id":4,"body":"%s","username":"anonymous","room_id":1}}`, tm)
 	// http responseの末尾に改行が含まれるので除去して比較します
 	actual := strings.TrimRight(string(b), "\n")
 	if actual != expected {
@@ -152,6 +151,7 @@ func TestAPIが新しいメッセージを作成する(t *testing.T) {
 	}
 }
 
+/*
 func TestHelloWorldBotが反応する(t *testing.T) {
 	// botが反応するキーワードを投稿する
 	r, err := http.Post(tsURL+"/api/messages", "application/json", bytes.NewBuffer([]byte(`{"body": "hello"}`)))
@@ -184,3 +184,4 @@ func TestHelloWorldBotが反応する(t *testing.T) {
 func TestAPIが指定したIDのメッセージを更新する(t *testing.T) {}
 
 func TestAPIが指定したIDのメッセージを削除する(t *testing.T) {}
+*/
