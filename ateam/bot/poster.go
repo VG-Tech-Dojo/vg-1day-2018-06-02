@@ -3,7 +3,7 @@ package bot
 import (
 	"context"
 
-	"github.com/VG-Tech-Dojo/vg-1day-2018-06-02/hayate4th/model"
+	"github.com/VG-Tech-Dojo/vg-1day-2018-06-02/ateam/model"
 )
 
 type (
