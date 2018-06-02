@@ -6,9 +6,10 @@ import (
 
 	"fmt"
 
+	"net/url"
+
 	"github.com/VG-Tech-Dojo/vg-1day-2018-06-02/yanashi/env"
 	"github.com/VG-Tech-Dojo/vg-1day-2018-06-02/yanashi/model"
-	"net/url"
 )
 
 const (
@@ -29,6 +30,8 @@ type (
 
 	// KeywordProcessor はメッセージ本文からキーワードを抽出するprocessorの構造体です
 	KeywordProcessor struct{}
+
+	gachaProcessor struct{}
 )
 
 // Process は"hello, world!"というbodyがセットされたメッセージのポインタを返します
@@ -47,6 +50,19 @@ func (p *OmikujiProcessor) Process(msgIn *model.Message) (*model.Message, error)
 		"小吉",
 		"末吉",
 		"凶",
+	}
+	result := fortunes[randIntn(len(fortunes))]
+	return &model.Message{
+		Body: result,
+	}, nil
+}
+
+func (p *gachaProcessor) Process(msgIn *model.Message) (*model.Message, error) {
+	fortunes := []string{
+		"SSレア",
+		"Sレア",
+		"レア",
+		"ノーマル",
 	}
 	result := fortunes[randIntn(len(fortunes))]
 	return &model.Message{
