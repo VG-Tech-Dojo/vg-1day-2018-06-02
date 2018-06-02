@@ -138,6 +138,6 @@ func (p *ChatProcessor) Process(msgIn *model.Message) (*model.Message, error) {
 
 	return &model.Message{
 		Body: bestReply.Reply,
-		Username: "ChatBot",
+		UserName: "ChatBot",
 	}, nil
 }
