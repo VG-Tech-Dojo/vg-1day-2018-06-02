@@ -16,6 +16,27 @@ type Message struct {
 	Stream chan *model.Message
 }
 
+// GetUserName is get username with json.
+func (m *Message) GetUserName(c *gin.Context) {
+	msg, err := model.UsernameByID(m.DB, c.Param("id"))
+
+	switch {
+	case err == sql.ErrNoRows:
+		resp := httputil.NewErrorResponse(err)
+		c.JSON(http.StatusNotFound, resp)
+		return
+	case err != nil:
+		resp := httputil.NewErrorResponse(err)
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"result": msg,
+		"error":  nil,
+	})
+}
+
 // All は全てのメッセージを取得してJSONで返します
 func (m *Message) All(c *gin.Context) {
 	msgs, err := model.MessagesAll(m.DB)
