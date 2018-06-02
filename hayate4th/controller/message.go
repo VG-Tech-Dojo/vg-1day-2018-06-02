@@ -139,7 +139,7 @@ func (m *Message) UpdateByID(c *gin.Context) {
 }
 
 // DeleteByID は...
-/*func (m *Message) DeleteByID(c *gin.Context) {
+func (m *Message) DeleteByID(c *gin.Context) {
 	// Mission 1-2. メッセージを削除しよう
 	
 	msg, err := model.MessageByID(m.DB, c.Param("id"))
@@ -164,4 +164,4 @@ func (m *Message) UpdateByID(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{})
 }
-*/
+
