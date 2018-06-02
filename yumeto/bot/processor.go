@@ -171,10 +171,20 @@ func (p *JiroProcessor) Process(msgIn *model.Message) (*model.Message, error) {
 	var nearbyRes PlacesAPIResponse
 
 	get(nearbyAPIURL, &nearbyRes)
+	isJiro := regexp.MustCompile(".*ラーメン二郎.*")
 
-	branchName := nearbyRes.Results[0].Name
+	branchName := "近くにありません"
+	vicinity := "none"
+	for _, result := range nearbyRes.Results {
+		if isJiro.MatchString(result.Name) {
+			branchName = result.Name
+			vicinity = result.Vicinity
+			break
+		}
+	}
+
 
 	return &model.Message{
-		Body: branchName,
+		Body: fmt.Sprintf("%s (%s)", branchName, vicinity),
 	}, nil
 }
