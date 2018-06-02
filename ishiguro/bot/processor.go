@@ -78,3 +78,17 @@ func (p *KeywordProcessor) Process(msgIn *model.Message) (*model.Message, error)
 		Body: "キーワード：" + strings.Join(keywords, ", "),
 	}, nil
 }
+
+func (p *GachaProcesser) Process(msgIn *model.Message) (*model.Message, error) {
+	reality := []string{
+		"SSレア",
+		"Sレア",
+		"レア",
+		"ノーマル",
+	}
+	result := reality[randIntn(len(reality))]
+	return &model.Message{
+		Body: result,
+		Username: "Bot",
+	}, nil
+}
