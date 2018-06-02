@@ -87,7 +87,7 @@ func TestAPIがメッセージを全て返す(t *testing.T) {
 		t.Fatalf("failed to read http response, %s", err)
 	}
 
-	expected := `{"error":null,"result":[{"id":1,"body":"hoge"},{"id":2,"body":"fuga"},{"id":3,"body":"piyo"}]}`
+	expected := `{"error":null,"result":[{"id":1,"body":"hoge","username":"foo"},{"id":2,"body":"fuga","username":"bar"},{"id":3,"body":"piyo","username":"chun"}]}`
 	// http responseの末尾に改行が含まれるので除去して比較します
 	actual := strings.TrimRight(string(b), "\n")
 	if actual != expected {
@@ -115,17 +115,19 @@ func TestAPIが指定したIDのメッセージを返す(t *testing.T) {
 		t.Fatalf("failed to read http response, %s", err)
 	}
 
-	expected := `{"error":null,"result":{"id":1,"body":"hoge"}}`
+	expected := `{"error":null,"result":{"id":1,"body":"hoge","username":"foo"}}`
 	// http responseの末尾に改行が含まれるので除去して比較します
 	actual := strings.TrimRight(string(b), "\n")
 	if actual != expected {
-		t.Fatalf("response body expected %s, but %s", expected, string(b))
+		t.Fatalf("response
+			 expected %s, but %s", expected, string(b))
 	}
 }
 
 func TestAPIが新しいメッセージを作成する(t *testing.T) {
 	tm := "testmessage"
-	resp, err := http.Post(tsURL+"/api/messages", "application/json", bytes.NewBuffer([]byte(fmt.Sprintf(`{"body": "%s"}`, tm))))
+	tu := "testusername"
+	resp, err := http.Post(tsURL+"/api/messages", "application/json", bytes.NewBuffer([]byte(fmt.Sprintf(`{"body": "%s","username": "%s"}`, tm, tu))))
 	if err != nil {
 		t.Fatalf("failed to post request: %s", err)
 	}
@@ -144,7 +146,7 @@ func TestAPIが新しいメッセージを作成する(t *testing.T) {
 		t.Fatalf("failed to read http response, %s", err)
 	}
 
-	expected := fmt.Sprintf(`{"error":null,"result":{"id":4,"body":"%s"}}`, tm)
+	expected := fmt.Sprintf(`{"error":null,"result":{"id":4,"body":"%s","username":"%s"}}`, tm, tu)
 	// http responseの末尾に改行が含まれるので除去して比較します
 	actual := strings.TrimRight(string(b), "\n")
 	if actual != expected {
@@ -173,7 +175,7 @@ func TestHelloWorldBotが反応する(t *testing.T) {
 		t.Fatalf("failed to read http response, %s", err)
 	}
 
-	expected := `{"error":null,"result":{"id":6,"body":"hello, world!"}}`
+	expected := `{"error":null,"result":{"id":6,"body":"hello, world!","username":"testusername"}}`
 	// http responseの末尾に改行が含まれるので除去して比較します
 	actual := strings.TrimRight(string(b), "\n")
 	if actual != expected {
