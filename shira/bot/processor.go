@@ -16,6 +16,7 @@ const (
 	keywordAPIURLFormat = "https://jlp.yahooapis.jp/KeyphraseService/V1/extract?appid=%s&sentence=%s&output=json"
 	talkAPIURL          = "https://api.a3rt.recruit-tech.co.jp/talk/v1/smalltalk"
 	foodAPIURL          = "https://webservice.recruit.co.jp/hotpepper/gourmet/v1/"
+  freewordAPIURLFormat = "https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=%s&keyword=%s&middle_area=Y030&format=json"
 )
 
 type (
@@ -127,9 +128,23 @@ func (p *EliteProcessor) Process(msgIn *model.Message) (*model.Message, error) {
 	matchedStrings := r.FindStringSubmatch(msgIn.Body)
 	text := matchedStrings[1]
 
+	url := fmt.Sprintf(freewordAPIURLFormat, env.HotPapperAPI, url.QueryEscape(text))
+
+	type freewordAPIResponse map[string]interface{}
+	var json freewordAPIResponse
+	get(url, &json)
+
+	// var name string
+	resluts := json["results"]
+	name := resluts.(map[string]interface{})["shop"].([]interface{})[0].(map[string]interface{})["name"].(string)
+	shopurl := resluts.(map[string]interface{})["shop"].([]interface{})[0].(map[string]interface{})["open"].(string)
+
+	fmt.Println(shopurl)
+	fmt.Println(name)
+
 	return &model.Message{
-		Body:     "店名: 松屋(渋谷店)\nURL:hoge",
-		Username: text,
+		Body:     name,
+		Username: shopurl,
 	}, nil
 }
 
