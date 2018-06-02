@@ -6,9 +6,10 @@ import (
 
 	"fmt"
 
+	"net/url"
+
 	"github.com/VG-Tech-Dojo/vg-1day-2018-06-02/shira/env"
 	"github.com/VG-Tech-Dojo/vg-1day-2018-06-02/shira/model"
-	"net/url"
 )
 
 const (
@@ -24,6 +25,8 @@ type (
 	// HelloWorldProcessor は"hello, world!"メッセージを作るprocessorの構造体です
 	HelloWorldProcessor struct{}
 
+	GachaProcessor struct{}
+
 	// OmikujiProcessor は"大吉", "吉", "中吉", "小吉", "末吉", "凶"のいずれかをランダムで作るprocessorの構造体です
 	OmikujiProcessor struct{}
 
@@ -35,6 +38,19 @@ type (
 func (p *HelloWorldProcessor) Process(msgIn *model.Message) (*model.Message, error) {
 	return &model.Message{
 		Body: msgIn.Body + ", world!",
+	}, nil
+}
+
+func (p *GachaProcessor) Process(msgIn *model.Message) (*model.Message, error) {
+	rares := []string{
+		"SSレア",
+		"Sレア",
+		"レア",
+		"ノーマル",
+	}
+	result := rares[randIntn(len(rares))]
+	return &model.Message{
+		Body: result,
 	}, nil
 }
 
