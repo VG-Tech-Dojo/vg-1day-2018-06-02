@@ -34,6 +34,8 @@ type (
 	GachaProcessor struct{}
 
 	ChatProcessor struct{}
+
+	QuizProcessor struct{}
 )
 
 // Process は"hello, world!"というbodyがセットされたメッセージのポインタを返します
@@ -69,6 +71,7 @@ func (p *GachaProcessor) Process(msgIn *model.Message) (*model.Message, error) {
 	result := rarity[randIntn(len(rarity))]
 	return &model.Message{
 		Body: result,
+		MessageType: 0,
 	}, nil
 }
 
@@ -94,6 +97,7 @@ func (p *KeywordProcessor) Process(msgIn *model.Message) (*model.Message, error)
 
 	return &model.Message{
 		Body: "キーワード：" + strings.Join(keywords, ", "),
+		MessageType: 0,
 	}, nil
 }
 
@@ -138,6 +142,21 @@ func (p *ChatProcessor) Process(msgIn *model.Message) (*model.Message, error) {
 
 	return &model.Message{
 		Body: bestReply.Reply,
-		Username: "ChatBot",
+		UserName: "ChatBot",
+		MessageType: 0,
+	}, nil
+}
+
+func (p *QuizProcessor) Process(msgIn *model.Message) (*model.Message, error) {
+	quizes := []string{
+		"「森のバター」と呼ばれている果物は？ A.アボカド B.マンゴー C.梨",
+		"板チョコにある溝は何のためにあるのか？ A.苦みを閉じ込めるため B.チョコを速く固めるため C.手で割りやすくするため",
+		"鏡の水垢を取る為に有効なものは？ A.クエン酸 B.塩 C.小麦粉",
+	}
+	quiz := quizes[randIntn(len(quizes))]
+	return &model.Message{
+		Body: quiz,
+		UserName: nil,
+		MessageType: 1,
 	}, nil
 }
