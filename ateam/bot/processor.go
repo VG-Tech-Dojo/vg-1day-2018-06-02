@@ -71,7 +71,7 @@ func (p *GachaProcessor) Process(msgIn *model.Message) (*model.Message, error) {
 	result := rarity[randIntn(len(rarity))]
 	return &model.Message{
 		Body: result,
-		MessageType: 0,
+		Messagetype: 0,
 	}, nil
 }
 
@@ -97,7 +97,7 @@ func (p *KeywordProcessor) Process(msgIn *model.Message) (*model.Message, error)
 
 	return &model.Message{
 		Body: "キーワード：" + strings.Join(keywords, ", "),
-		MessageType: 0,
+		Messagetype: 0,
 	}, nil
 }
 
@@ -143,7 +143,7 @@ func (p *ChatProcessor) Process(msgIn *model.Message) (*model.Message, error) {
 	return &model.Message{
 		Body: bestReply.Reply,
 		UserName: "ChatBot",
-		MessageType: 0,
+		Messagetype: 0,
 	}, nil
 }
 
@@ -156,7 +156,7 @@ func (p *QuizProcessor) Process(msgIn *model.Message) (*model.Message, error) {
 	quiz := quizes[randIntn(len(quizes))]
 	return &model.Message{
 		Body: quiz,
-		UserName: nil,
-		MessageType: 1,
+		UserName: "",
+		Messagetype: 1,
 	}, nil
 }

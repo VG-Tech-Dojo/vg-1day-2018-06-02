@@ -2,7 +2,7 @@ package controller
 
 import (
 	"database/sql"
-	"errors"
+	// "errors"
 	"net/http"
 
 	"github.com/VG-Tech-Dojo/vg-1day-2018-06-02/ateam/httputil"
@@ -19,7 +19,7 @@ type User struct {
 func (u *User) Create(c *gin.Context) {
 	var user model.User
 
-	inserted, err := user.Insert(m.DB)
+	inserted, err := user.Insert(u.DB)
 	if err != nil {
 		resp := httputil.NewErrorResponse(err)
 		c.JSON(http.StatusInternalServerError, resp)

@@ -31,7 +31,7 @@ func (u *User) Insert(db *sql.DB) (*User, error) {
 
 	return &User{
 		ID:   id,
-    Name: u.Name,
+    Name: name,
 	}, nil
 }
 func randIntn(n int) int {
