@@ -84,7 +84,7 @@ func UpdateMessageBody(db *sql.DB, msg *Message, newBody string) (*Message, erro
 }
 
 // Mission 1-2. メッセージを削除しよう
-/*
+
 func DeleteMessage(db *sql.DB, msg *Message) error {
 	if _, err := db.Exec(`delete from message where id == ?`, msg.ID); err != nil {
 		return err
@@ -92,4 +92,4 @@ func DeleteMessage(db *sql.DB, msg *Message) error {
 
 	return nil
 }
-*/
+
