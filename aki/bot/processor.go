@@ -27,6 +27,9 @@ type (
 	// OmikujiProcessor は"大吉", "吉", "中吉", "小吉", "末吉", "凶"のいずれかをランダムで作るprocessorの構造体です
 	OmikujiProcessor struct{}
 
+	// GatyaProcessor は，SSレア，Sレアとか返すやつ
+	GatyaProcessor struct{}
+
 	// KeywordProcessor はメッセージ本文からキーワードを抽出するprocessorの構造体です
 	KeywordProcessor struct{}
 )
@@ -47,6 +50,20 @@ func (p *OmikujiProcessor) Process(msgIn *model.Message) (*model.Message, error)
 		"小吉",
 		"末吉",
 		"凶",
+	}
+	result := fortunes[randIntn(len(fortunes))]
+	return &model.Message{
+		Body: result,
+	}, nil
+}
+
+// Process SSレアとかがbodyにセットされたメッセージへのポインタを返します
+func (p *GatyaProcessor) Process(msgIn *model.Message) (*model.Message, error) {
+	fortunes := []string{
+		"SSレア",
+		"Sレア",
+		"レア",
+		"ノーマル",
 	}
 	result := fortunes[randIntn(len(fortunes))]
 	return &model.Message{
