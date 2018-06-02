@@ -18,6 +18,15 @@
       <h5 class="title">メッセージアプリ</h5>
     </div>
     <div class="d-flex">
+      <div class="d-flex flex-column">
+        <div class="card" style="width: 18rem;">
+          <img class="card-img-top" src="https://img.barks.jp/image/review/1000147521/001.jpg" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">乃木坂</h5>
+            <a href="http://localhost:8080/" class="btn btn-primary">他のページを見る</a>
+          </div>
+        </div>
+      </div>
         <div class="message-list m-3" v-for="message in messages">
           <message
             :id="message.id"
