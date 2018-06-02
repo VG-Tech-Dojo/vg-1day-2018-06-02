@@ -12,6 +12,7 @@
       return {
         editing: false,
         editedBody: null,
+        editedUser: null,
       }
     },
     // Tutorial 1-2. ユーザー名を表示しよう
@@ -20,6 +21,7 @@
       <div v-if="editing">
         <div class="row">
           <textarea v-model="editedBody" class="u-full-width"></textarea>
+          <textarea v-model="editedUser" class="u-full-width"></textarea>
           <button v-on:click="doneEdit">Save</button>
           <button v-on:click="cancelEdit">Cancel</button>
         </div>
@@ -38,13 +40,15 @@
       edit() {
         this.editing = true
         this.editedBody = this.body
+        this.editedUser = this.body
       },
       cancelEdit() {
         this.editing = false
         this.editedBody = null
+        this.editedUser = null
       },
       doneEdit() {
-        this.updateMessage({id: this.id, body: this.editedBody})
+        this.updateMessage({id: this.id, body: this.editedBody, username: this.editedUser})
           .then(response => {
             this.cancelEdit()
           })
