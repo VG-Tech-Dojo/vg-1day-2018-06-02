@@ -100,3 +100,20 @@ func NewKeywordBot(out chan *model.Message) *Bot {
 		processor: processor,
 	}
 }
+
+// NewGachaBot
+func NewGachaBot(out chan *model.Message) *Bot {
+	in := make(chan *model.Message)
+
+	checker := NewRegexpChecker("\\Aガチャ\\z")
+
+	processor := &GachaProcessor{}
+
+	return &Bot{
+		name:      "gacha",
+		in:        in,
+		out:       out,
+		checker:   checker,
+		processor: processor,
+	}
+}
