@@ -6,9 +6,10 @@ import (
 
 	"fmt"
 
+	"net/url"
+
 	"github.com/VG-Tech-Dojo/vg-1day-2018-06-02/tomochin/env"
 	"github.com/VG-Tech-Dojo/vg-1day-2018-06-02/tomochin/model"
-	"net/url"
 )
 
 const (
@@ -29,6 +30,9 @@ type (
 
 	// KeywordProcessor はメッセージ本文からキーワードを抽出するprocessorの構造体です
 	KeywordProcessor struct{}
+
+	// GachaProcessor は"SSレア", "Sレア", "レア", "ノーマル"のいずれかをランダムで作るprocessorの構造体です
+	GachaProcessor struct{}
 )
 
 // Process は"hello, world!"というbodyがセットされたメッセージのポインタを返します
@@ -51,6 +55,20 @@ func (p *OmikujiProcessor) Process(msgIn *model.Message) (*model.Message, error)
 	result := fortunes[randIntn(len(fortunes))]
 	return &model.Message{
 		Body: result,
+	}, nil
+}
+
+func (p *GachaProcessor) Process(msgIn *model.Message) (*model.Message, error) {
+	gacha := []string{
+		"SSレア",
+		"Sレア",
+		"レア",
+		"ノーマル",
+	}
+	result := gacha[randIntn(len(gacha))]
+	return &model.Message{
+		Body: result,
+		User: "gachabot",
 	}, nil
 }
 
