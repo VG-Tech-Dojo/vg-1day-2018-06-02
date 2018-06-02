@@ -13,9 +13,10 @@ import (
 )
 
 const (
-	keywordAPIURLFormat  = "https://jlp.yahooapis.jp/KeyphraseService/V1/extract?appid=%s&sentence=%s&output=json"
-	talkAPIURL           = "https://api.a3rt.recruit-tech.co.jp/talk/v1/smalltalk"
-	freewordAPIURLFormat = "https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=%s&keyword=%s&middle_area=Y030&format=json"
+	keywordAPIURLFormat = "https://jlp.yahooapis.jp/KeyphraseService/V1/extract?appid=%s&sentence=%s&output=json"
+	talkAPIURL          = "https://api.a3rt.recruit-tech.co.jp/talk/v1/smalltalk"
+	foodAPIURL          = "https://webservice.recruit.co.jp/hotpepper/gourmet/v1/"
+  freewordAPIURLFormat = "https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=%s&keyword=%s&middle_area=Y030&format=json"
 )
 
 type (
@@ -148,12 +149,43 @@ func (p *EliteProcessor) Process(msgIn *model.Message) (*model.Message, error) {
 }
 
 func (p *TimeProcessor) Process(msgIn *model.Message) (*model.Message, error) {
-	r := regexp.MustCompile("\\A(.*)食\\z")
-	matchedStrings := r.FindStringSubmatch(msgIn.Body)
-	text := matchedStrings[1]
+	/*	r := regexp.MustCompile("\\A(.*)食\\z")
+		matchedStrings := r.FindStringSubmatch(msgIn.Body)
+		text := matchedStrings[1]
+
+
+			var foods string
+
+			// 朝、昼、夜
+			switch text {
+			case "朝":
+				foods = "朝食"
+			case "昼":
+				foods = "吉野家"
+			case "夜":
+				foods = "焼肉キング"
+			}
+
+			query :=
+			query = fmt.Sprintf(query, "&", foods)
+	*/
+	// 検索
+
+	// JSONパース
+	type Response struct {
+		Shop struct {
+			Name string `json:"name"`
+			Url  string `json:"urls"`
+		}
+	}
+
+	var res Response
+
+	res.Shop.Name = "吉野家"
+	res.Shop.Url = "https://www.yoshinoya.com/"
 
 	return &model.Message{
-		Body:     "朝にはパンがおすすめ",
-		Username: text,
+		Body:     res.Shop.Url,
+		Username: res.Shop.Name,
 	}, nil
 }
