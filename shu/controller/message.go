@@ -3,6 +3,7 @@ package controller
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/VG-Tech-Dojo/vg-1day-2018-06-02/shu/httputil"
@@ -116,8 +117,33 @@ func (m *Message) Create(c *gin.Context) {
 // UpdateByID は...
 func (m *Message) UpdateByID(c *gin.Context) {
 	// Mission 1-1. メッセージを編集しよう
-	// ...
-	c.JSON(http.StatusCreated, gin.H{})
+	msg, err := model.MessageByID(m.DB, c.Param("id"))
+	if err != nil {
+		return
+	}
+
+	var requestMessage model.Message
+	if c.Request.ContentLength == 0 {
+		resp := httputil.NewErrorResponse(errors.New("body is missing"))
+		c.JSON(http.StatusBadRequest, resp)
+		return
+	}
+
+	if err := c.BindJSON(&requestMessage); err != nil {
+		resp := httputil.NewErrorResponse(err)
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+	newMessage, err := msg.Update(m.DB, requestMessage.Body)
+	if err != nil {
+		return
+	}
+	fmt.Println(newMessage)
+	c.JSON(http.StatusCreated, gin.H{
+		"result": newMessage,
+		"error":  nil,
+	})
 }
 
 // DeleteByID は...
