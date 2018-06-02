@@ -26,8 +26,8 @@ func MessagesAll(db *sql.DB) ([]*Message, error) {
 	var ms []*Message
 	for rows.Next() {
 		m := &Message{}
-		// Tutorial 1-2. ユーザー名を表示しよう
-		if err := rows.Scan(&m.ID, &m.Body, &m.UserName); err != nil {
+		// if err := rows.Scan(&m.ID, &m.Body, &m.UserName); err != nil {
+		if err := rows.Scan(&m.ID, &m.UserName, &m.Body); err != nil {
 			return nil, err
 		}
 		ms = append(ms, m)
@@ -44,7 +44,7 @@ func MessageByID(db *sql.DB, id string) (*Message, error) {
 	m := &Message{}
 
 	// Tutorial 1-2. ユーザー名を表示しよう
-	if err := db.QueryRow(`select id, body from message where id = ?`, id).Scan(&m.ID, &m.Body); err != nil {
+	if err := db.QueryRow(`select id, username, body from message where id = ?`, id).Scan(&m.ID, &m.UserName, &m.Body); err != nil {
 		return nil, err
 	}
 
@@ -66,23 +66,22 @@ func (m *Message) Insert(db *sql.DB) (*Message, error) {
 	return &Message{
 		ID:   id,
 		Body: m.Body,
-    UserName: m.UserName,
+		UserName: m.UserName,
 		// Tutorial 1-2. ユーザー名を追加しよう
 	}, nil
 }
 
 // Mission 1-1. メッセージを編集しよう
-// ...
-func (m *Message) Update(db *sql.DB) (*Message, error) {
-  _, err := db.Exec(`update message set body = ? where id = ?`, m.Body, m.ID)
-  if err != nil {
-    return nil, err
-  }
-  return &Message{
-    ID: m.ID,
-    Body: m.Body,
-    UserName: m.UserName,
-  }, nil
+func UpdateMessageBody(db *sql.DB, msg *Message, newBody string) (*Message, error) {
+	if _, err := db.Exec(`update message set body = ? where id == ?`, newBody, msg.ID); err != nil {
+		return nil, err
+	}
+
+	return &Message{
+		ID:   msg.ID,
+		Body: newBody,
+		UserName: msg.UserName,
+	}, nil
 }
 // Mission 1-2. メッセージを削除しよう
 // ...

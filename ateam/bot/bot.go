@@ -132,3 +132,19 @@ func NewChatBot(out chan *model.Message) *Bot {
 		processor: processor,
 	}
 }
+
+func NewQuizBot(out chan *model.Message) *Bot {
+	in := make(chan *model.Message)
+
+	checker := NewRegexpChecker("\\Aquiz\\z")
+
+	processor := &QuizProcessor{}
+
+	return &Bot{
+		name:      "quizbot",
+		in:        in,
+		out:       out,
+		checker:   checker,
+		processor: processor,
+	}
+}
