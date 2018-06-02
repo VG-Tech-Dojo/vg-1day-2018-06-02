@@ -63,12 +63,18 @@ func (s *Server) Init(dbconf, env string) error {
 	})
 
 	msgStream := make(chan *model.Message)
+	rmStream := make(chan *model.Room)
+
 	mctr := &controller.Message{DB: db, Stream: msgStream}
-	api.GET("/messages", mctr.All)
-	api.GET("/messages/:id", mctr.GetByID)
-	api.POST("/messages", mctr.Create)
-	api.PUT("/messages/:id", mctr.UpdateByID)
-	api.DELETE("/messages/:id", mctr.DeleteByID)
+	rctr := &controller.Room{DB: db, Stream: rmStream}
+
+	api.GET("/", rctr.RoomAll)
+	api.GET("/api/rooms", rctr.RoomAll)
+	api.GET("/rooms/:room_id/messages", mctr.All)
+	api.GET("/rooms/:room_id/messages/:id", mctr.GetByID)
+	api.POST("/rooms/:room_id/messages", mctr.Create)
+	api.PUT("/rooms/:room_id/messages/:id", mctr.UpdateByID)
+	api.DELETE("/rooms/:room_id/messages/:id", mctr.DeleteByID)
 
 	// bot
 	mc := bot.NewMulticaster(msgStream)
