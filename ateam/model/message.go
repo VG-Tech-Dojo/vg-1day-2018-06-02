@@ -9,6 +9,7 @@ type Message struct {
 	ID   int64  `json:"id"`
 	Body string `json:"body"`
 	UserName string `json:"username"`
+	MessageType int64 `json:"messagetype"`
 	// Tutorial 1-2. ユーザー名を表示しよう
 }
 
@@ -53,6 +54,11 @@ func MessageByID(db *sql.DB, id string) (*Message, error) {
 // Insert はmessageテーブルに新規データを1件追加します
 func (m *Message) Insert(db *sql.DB) (*Message, error) {
 	// Tutorial 1-2. ユーザー名を追加しよう
+
+	if m.UserName == "QuizBot" {
+		return nil, nil
+	}
+
 	res, err := db.Exec(`insert into message (body, username) values (?, ?)`, m.Body, m.UserName)
 	if err != nil {
 		return nil, err
