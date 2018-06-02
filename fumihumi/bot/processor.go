@@ -29,6 +29,9 @@ type (
 
 	// KeywordProcessor はメッセージ本文からキーワードを抽出するprocessorの構造体です
 	KeywordProcessor struct{}
+
+	// Gachaprocessorはレアキャラを見つけるための構造体です。
+	GachaProcessor struct{}
 )
 
 // Process は"hello, world!"というbodyがセットされたメッセージのポインタを返します
@@ -48,6 +51,21 @@ func (p *OmikujiProcessor) Process(msgIn *model.Message) (*model.Message, error)
 		"末吉",
 		"凶",
 	}
+	result := fortunes[randIntn(len(fortunes))]
+	return &model.Message{
+		Body: result,
+	}, nil
+}
+
+func (p *GachaProcessor) Process(msgIn *model.Message) (*model.Message, error){
+	// ガチャの内容を変更するならここの配列いじってあげる
+	fortunes := []string{
+		"SSれあ",
+		"Sれあ",
+		"ノーマル",
+		"産廃",
+	}
+
 	result := fortunes[randIntn(len(fortunes))]
 	return &model.Message{
 		Body: result,
