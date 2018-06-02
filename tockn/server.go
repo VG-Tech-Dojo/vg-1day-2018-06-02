@@ -49,7 +49,7 @@ func (s *Server) Init(dbconf, env string) error {
 	s.Engine.LoadHTMLGlob("./templates/*")
 
 	s.Engine.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{})
+		c.HTML(http.StatusOK, "rooms.html", gin.H{})
 	})
 	s.Engine.Static("/assets", "./assets")
 
@@ -63,12 +63,18 @@ func (s *Server) Init(dbconf, env string) error {
 	})
 
 	msgStream := make(chan *model.Message)
+	rmStream := make(chan *model.Room)
+
 	mctr := &controller.Message{DB: db, Stream: msgStream}
+	rctr := &controller.Room{DB: db, Stream: rmStream}
+
+	api.GET("/api/rooms", rctr.RoomAll)
 	api.GET("/rooms/:room_id/messages", mctr.All)
 	api.GET("/rooms/:room_id/messages/:id", mctr.GetByID)
 	api.POST("/rooms/:room_id/messages", mctr.Create)
 	api.PUT("/rooms/:room_id/messages/:id", mctr.UpdateByID)
 	api.DELETE("/rooms/:room_id/messages/:id", mctr.DeleteByID)
+
 	// bot
 	mc := bot.NewMulticaster(msgStream)
 	s.multicaster = mc
