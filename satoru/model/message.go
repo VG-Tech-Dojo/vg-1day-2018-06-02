@@ -6,8 +6,9 @@ import (
 
 // Message はメッセージの構造体です
 type Message struct {
-	ID   int64  `json:"id"`
-	Body string `json:"body"`
+	ID       int64  `json:"id"`
+	Body     string `json:"body"`
+	UserName string `json:"username"`
 	// Tutorial 1-2. ユーザー名を表示しよう
 }
 
