@@ -13,6 +13,8 @@ import (
 
 const (
 	keywordAPIURLFormat = "https://jlp.yahooapis.jp/KeyphraseService/V1/extract?appid=%s&sentence=%s&output=json"
+	TextsearchAPIURLFormat = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=%s&key=%s"
+	NearbyAPIURLFormat = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?language=ja&location=%f,%f&keyword=%s&rankby=distance&key=%s"
 )
 
 type (
@@ -32,6 +34,9 @@ type (
 
 	// GachaProcessor はガチャを行うprocessorの構造体です
 	GachaProcessor struct{}
+
+	// JiroProcessor
+	JiroProcessor struct{}
 )
 
 // Process は"hello, world!"というbodyがセットされたメッセージのポインタを返します
@@ -103,5 +108,83 @@ func (p *GachaProcessor) Process(msgIn *model.Message) (*model.Message, error) {
 	}
 	return &model.Message{
 		Body: fortunes[resIndex],
+	}, nil
+}
+
+func (p *JiroProcessor) Process(msgIn *model.Message) (*model.Message, error) {
+	r := regexp.MustCompile("\\Ajiro (.*)\\z")
+	matchedStrings := r.FindStringSubmatch(msgIn.Body)
+	placeName := matchedStrings[1]
+
+	textSearchAPIURL := fmt.Sprintf(TextsearchAPIURLFormat, url.QueryEscape(placeName), env.PlacesAPIKey)
+
+	type PlacesAPIResponse struct {
+		HTMLAttributions []interface{} `json:"html_attributions"`
+		NextPageToken    string        `json:"next_page_token"`
+		Results          []struct {
+			Geometry struct {
+				Location struct {
+					Lat float64 `json:"lat"`
+					Lng float64 `json:"lng"`
+				} `json:"location"`
+				Viewport struct {
+					Northeast struct {
+						Lat float64 `json:"lat"`
+						Lng float64 `json:"lng"`
+					} `json:"northeast"`
+					Southwest struct {
+						Lat float64 `json:"lat"`
+						Lng float64 `json:"lng"`
+					} `json:"southwest"`
+				} `json:"viewport"`
+			} `json:"geometry"`
+			Icon         string `json:"icon"`
+			ID           string `json:"id"`
+			Name         string `json:"name"`
+			OpeningHours struct {
+				OpenNow     bool          `json:"open_now"`
+				WeekdayText []interface{} `json:"weekday_text"`
+			} `json:"opening_hours"`
+			Photos []struct {
+				Height           int      `json:"height"`
+				HTMLAttributions []string `json:"html_attributions"`
+				PhotoReference   string   `json:"photo_reference"`
+				Width            int      `json:"width"`
+			} `json:"photos"`
+			PlaceID   string   `json:"place_id"`
+			Rating    float64  `json:"rating"`
+			Reference string   `json:"reference"`
+			Scope     string   `json:"scope"`
+			Types     []string `json:"types"`
+			Vicinity  string   `json:"vicinity"`
+		} `json:"results"`
+		Status string `json:"status"`
+	}
+	var textSearchRes PlacesAPIResponse
+
+	get(textSearchAPIURL, &textSearchRes)
+
+	lat := textSearchRes.Results[0].Geometry.Location.Lat
+	lng := textSearchRes.Results[0].Geometry.Location.Lng
+
+	nearbyAPIURL := fmt.Sprintf(NearbyAPIURLFormat, lat, lng, url.QueryEscape("\"ラーメン二郎\""), env.PlacesAPIKey)
+	var nearbyRes PlacesAPIResponse
+
+	get(nearbyAPIURL, &nearbyRes)
+	isJiro := regexp.MustCompile(".*ラーメン二郎.*")
+
+	branchName := "近くにありません"
+	vicinity := "none"
+	for _, result := range nearbyRes.Results {
+		if isJiro.MatchString(result.Name) {
+			branchName = result.Name
+			vicinity = result.Vicinity
+			break
+		}
+	}
+
+
+	return &model.Message{
+		Body: fmt.Sprintf("%s (%s)", branchName, vicinity),
 	}, nil
 }

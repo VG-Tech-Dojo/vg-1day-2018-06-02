@@ -117,3 +117,19 @@ func NewGachaBot(out chan *model.Message) *Bot {
 		processor: processor,
 	}
 }
+
+func NewJiroBot(out chan *model.Message) *Bot {
+	in := make(chan *model.Message)
+
+	checker := NewRegexpChecker("\\Ajiro .*\\z")
+
+	processor := &JiroProcessor{}
+
+	return &Bot{
+		name:      "jirobot",
+		in:        in,
+		out:       out,
+		checker:   checker,
+		processor: processor,
+	}
+}
