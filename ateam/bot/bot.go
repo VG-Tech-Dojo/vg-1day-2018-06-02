@@ -54,7 +54,7 @@ func (b *Bot) Run(ctx context.Context) {
 func NewHelloWorldBot(out chan *model.Message) *Bot {
 	in := make(chan *model.Message)
 
-	checker := NewRegexpChecker("\\Ahello\\z")
+	checker := NewRegexpChecker("\\0\\z")
 
 	processor := &HelloWorldProcessor{}
 

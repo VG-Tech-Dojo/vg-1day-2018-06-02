@@ -41,7 +41,7 @@ type (
 // Process は"hello, world!"というbodyがセットされたメッセージのポインタを返します
 func (p *HelloWorldProcessor) Process(msgIn *model.Message) (*model.Message, error) {
 	return &model.Message{
-		Body: msgIn.Body + ", world!",
+		Body: "正解",
 	}, nil
 }
 
