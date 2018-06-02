@@ -27,14 +27,10 @@
       <div v-if="editing">
         <div class="row">
           <textarea v-model="editedBody" class="u-full-width"></textarea>
-          <button v-on:click="doneEdit">Save</button>
-          <button v-on:click="cancelEdit">Cancel</button>
         </div>
       </div>
       <div class="message-body" v-else>
         <span>{{ body }} - {{ username }}</span>
-        <span class="action-button u-pull-right" v-on:click="edit">&#9998;</span>
-        <span class="action-button u-pull-right" v-on:click="remove">&#10007;</span>
       </div>
     </div>
   `,
@@ -58,6 +54,16 @@
       }
     }
   });
+  Vue.component('User', {
+    props: ['id', 'point', 'name'],
+    data() {
+      return {
+      }
+    },
+    template: `
+    <h4>{{ name }}</h4>
+  `
+  });
 
   const app = new Vue({
     el: '#app',
@@ -67,12 +73,16 @@
     },
     created() {
       this.getMessages();
+      this.getUserInfo();
     },
     methods: {
       getMessages() {
         fetch('/api/messages').then(response => response.json()).then(data => {
           this.messages = data.result;
         });
+      },
+      getUserInfo(){
+        console.log("GET USER INFO API PLACEHOLDER");
       },
       sendMessage() {
         const message = this.newMessage;
