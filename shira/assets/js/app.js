@@ -14,7 +14,7 @@
         editedBody: null,
       }
     },
-    // Tutorial 1-2. ユーザー名を表示しよう
+      // Tutorial 1-2. ユーザー名を表示しよう
     template: `
     <div class="message">
       <div v-if="editing">
@@ -25,9 +25,11 @@
         </div>
       </div>
       <div class="message-body" v-else>
-        <span>{{ body }} - {{ username }}</span>
+        <span>{{ username }} - <a href="{{ body }}"">{{ body }}</a></span>
+       <!--
         <span class="action-button u-pull-right" v-on:click="edit">&#9998;</span>
         <span class="action-button u-pull-right" v-on:click="remove">&#10007;</span>
+       -->
       </div>
     </div>
   `,
