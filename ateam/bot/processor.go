@@ -156,7 +156,7 @@ func (p *QuizProcessor) Process(msgIn *model.Message) (*model.Message, error) {
 	quiz := quizes[randIntn(len(quizes))]
 	return &model.Message{
 		Body: quiz,
-		UserName: nil,
+		UserName: "QuizBot",
 		MessageType: 1,
 	}, nil
 }
