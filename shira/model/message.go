@@ -6,16 +6,16 @@ import (
 
 // Message はメッセージの構造体です
 type Message struct {
-	ID       int64  `json:"id"`
-	Body     string `json:"body"`
+	ID   int64  `json:"id"`
+	Body string `json:"body"`
+	// Tutorial 1-1. ユーザー名を表示しよう
 	Username string `json:"username"`
-	// Tutorial 1-2. ユーザー名を表示しよう
 }
 
 // MessagesAll は全てのメッセージを返します
 func MessagesAll(db *sql.DB) ([]*Message, error) {
 
-	// Tutorial 1-2. ユーザー名を表示しよう
+	// Tutorial 1-1. ユーザー名を表示しよう
 	rows, err := db.Query(`select id, body, username from message`)
 	if err != nil {
 		return nil, err
@@ -25,7 +25,7 @@ func MessagesAll(db *sql.DB) ([]*Message, error) {
 	var ms []*Message
 	for rows.Next() {
 		m := &Message{}
-		// Tutorial 1-2. ユーザー名を表示しよう
+		// Tutorial 1-1. ユーザー名を表示しよう
 		if err := rows.Scan(&m.ID, &m.Body, &m.Username); err != nil {
 			return nil, err
 		}
@@ -42,8 +42,8 @@ func MessagesAll(db *sql.DB) ([]*Message, error) {
 func MessageByID(db *sql.DB, id string) (*Message, error) {
 	m := &Message{}
 
-	// Tutorial 1-2. ユーザー名を表示しよう
-	if err := db.QueryRow(`select id, body, username from message where id = ?`, id).Scan(&m.ID, &m.Body); err != nil {
+	// Tutorial 1-1. ユーザー名を表示しよう
+	if err := db.QueryRow(`select id, body, username from message where id = ?`, id).Scan(&m.ID, &m.Body, &m.Username); err != nil {
 		return nil, err
 	}
 
@@ -53,7 +53,7 @@ func MessageByID(db *sql.DB, id string) (*Message, error) {
 // Insert はmessageテーブルに新規データを1件追加します
 func (m *Message) Insert(db *sql.DB) (*Message, error) {
 	// Tutorial 1-2. ユーザー名を追加しよう
-	res, err := db.Exec(`insert into message (body) values (?)`, m.Body)
+	res, err := db.Exec(`insert into message (body, username) values (?, ?)`, m.Body, m.Username)
 	if err != nil {
 		return nil, err
 	}
@@ -71,18 +71,21 @@ func (m *Message) Insert(db *sql.DB) (*Message, error) {
 }
 
 // Mission 1-1. メッセージを編集しよう
-// ...
-func (m *Message) Edit(db *sql.DB) (*Message, error) {
-	_, err := db.Exec(`update message set body=? where id=?`, m.Body, m.ID)
-	if err != nil {
+func UpdateMessageBody(db *sql.DB, msg *Message, newBody string) (*Message, error) {
+	if _, err := db.Exec(`update message set body = ? where id = ?`, newBody, msg.ID); err != nil {
 		return nil, err
 	}
 	return &Message{
-		ID:       m.ID,
-		Body:     m.Body,
-		Username: m.Username,
+		ID:       msg.ID,
+		Body:     newBody,
+		Username: msg.Username,
 	}, nil
 }
 
 // Mission 1-2. メッセージを削除しよう
-// ...
+func DeleteMessage(db *sql.DB, id int64) error {
+	if _, err := db.Exec(`delete from message where id = ?`, id); err != nil {
+		return err
+	}
+	return nil
+}
