@@ -14,6 +14,7 @@ import (
 
 const (
 	keywordAPIURLFormat = "https://jlp.yahooapis.jp/KeyphraseService/V1/extract?appid=%s&sentence=%s&output=json"
+	talkAPIEndpoint     = "https://api.a3rt.recruit-tech.co.jp/talk/v1/smalltalk"
 )
 
 type (
@@ -33,6 +34,8 @@ type (
 
 	// GachaProcessor は"SSレア", "Sレア", "レア", "ノーマル"のいずれかをランダムで作るprocessorの構造体です
 	GachaProcessor struct{}
+
+	TalkProcessor struct{}
 )
 
 // Process は"hello, world!"というbodyがセットされたメッセージのポインタを返します
@@ -94,5 +97,48 @@ func (p *KeywordProcessor) Process(msgIn *model.Message) (*model.Message, error)
 
 	return &model.Message{
 		Body: "キーワード：" + strings.Join(keywords, ", "),
+	}, nil
+}
+
+func (p *TalkProcessor) Process(msgIn *model.Message) (*model.Message, error) {
+	r := regexp.MustCompile("\\Atalk (.*)\\z")
+	matchedStrings := r.FindStringSubmatch(msgIn.Body)
+	query := matchedStrings[1]
+
+	reqBody := make(url.Values)
+	reqBody.Set("apikey", env.TalkAPIAppID)
+	reqBody.Set("query", query)
+
+	type (
+		Result struct {
+			Perplexity float32 `json:"perplexity"`
+			Reply      string  `json:reply`
+		}
+		Response struct {
+			Status  int      `json:"status"`
+			Message string   `json:"message"`
+			Results []Result `json:"results"`
+		}
+	)
+
+	var res Response
+	if err := post(talkAPIEndpoint, reqBody, &res); err != nil {
+		return nil, err
+	}
+
+	if len(res.Results) == 0 {
+		return nil, fmt.Errorf("no reply")
+	}
+
+	var bestReply Result
+	for _, r := range res.Results {
+		if r.Perplexity > bestReply.Perplexity {
+			bestReply = r
+		}
+	}
+
+	return &model.Message{
+		Body: bestReply.Reply,
+		User: "り○なちゃん2号",
 	}, nil
 }
