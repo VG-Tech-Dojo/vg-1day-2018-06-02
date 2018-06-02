@@ -4,7 +4,7 @@
     this.body = '';
     this.username = '';
     this.userid = '';
-    this.type = '';
+    this.type = '2';
   };
   const User = function() {
     this.id = '';
