@@ -106,10 +106,10 @@ func NewGachaBot(out chan *model.Message) *Bot {
 
 	checker := NewRegexpChecker("\\Agacha\\z")
 
-	processor := &KeywordProcessor{}
+	processor := &GachaProcesser{}
 
 	return &Bot{
-		name:      "keywordbot",
+		name:      "gachabot",
 		in:        in,
 		out:       out,
 		checker:   checker,

@@ -85,13 +85,13 @@ func (p *KeywordProcessor) Process(msgIn *model.Message) (*model.Message, error)
 }
 
 func (p *GachaProcesser) Process(msgIn *model.Message) (*model.Message, error) {
-	fortunes := []string{
+	reality := []string{
 		"SSレア",
 		"Sレア",
 		"レア",
 		"ノーマル",
 	}
-	result := fortunes[randIntn(len(fortunes))]
+	result := reality[randIntn(len(reality))]
 	return &model.Message{
 		Body: result,
 		Username: "Bot",
