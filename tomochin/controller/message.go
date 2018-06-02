@@ -3,6 +3,7 @@ package controller
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/VG-Tech-Dojo/vg-1day-2018-06-02/tomochin/httputil"
@@ -75,6 +76,9 @@ func (m *Message) Create(c *gin.Context) {
 
 	// Tutorial 1-2. ユーザー名を追加しよう
 	// できる人は、ユーザー名が空だったら`anonymous`等適当なユーザー名で投稿するようにしてみよう
+	if msg.User == "" {
+		msg.User = "名無しさん"
+	}
 
 	inserted, err := msg.Insert(m.DB)
 	if err != nil {
@@ -92,16 +96,70 @@ func (m *Message) Create(c *gin.Context) {
 	})
 }
 
-// UpdateByID は...
+// UpdateByID はパラメーターで受け取ったidのメッセージを更新し、
+// 更新したメッセージをJSONで返します
 func (m *Message) UpdateByID(c *gin.Context) {
+	fmt.Printf("u1")
+	msg, err := model.MessageByID(m.DB, c.Param("id"))
+	switch {
+	case err == sql.ErrNoRows:
+		resp := httputil.NewErrorResponse(err)
+		c.JSON(http.StatusNotFound, resp)
+		return
+	case err != nil:
+		resp := httputil.NewErrorResponse(err)
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+	fmt.Printf("u2")
+	var requestedmsg model.Message
 	// Mission 1-1. メッセージを編集しよう
-	// ...
-	c.JSON(http.StatusCreated, gin.H{})
+	if c.Request.ContentLength == 0 {
+		resp := httputil.NewErrorResponse(errors.New("body is missing"))
+		c.JSON(http.StatusBadRequest, resp)
+		return
+	}
+	fmt.Printf("u3")
+	if err := c.BindJSON(&requestedmsg); err != nil {
+		resp := httputil.NewErrorResponse(err)
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+	fmt.Printf("u4")
+	updatedMessage, err := model.UpdateMessageByID(m.DB, msg, requestedmsg.Body)
+	if err != nil {
+		resp := httputil.NewErrorResponse(err)
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{
+		"result": updatedMessage,
+		"error":  nil,
+	})
 }
 
 // DeleteByID は...
 func (m *Message) DeleteByID(c *gin.Context) {
 	// Mission 1-2. メッセージを削除しよう
-	// ...
+	msg, err := model.MessageByID(m.DB, c.Param("id"))
+	switch {
+	case err == sql.ErrNoRows:
+		resp := httputil.NewErrorResponse(err)
+		c.JSON(http.StatusNotFound, resp)
+		return
+	case err != nil:
+		resp := httputil.NewErrorResponse(err)
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+	if err := model.DeleteMessageByID(m.DB, msg.ID); err != nil {
+		resp := httputil.NewErrorResponse(err)
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{})
 }
