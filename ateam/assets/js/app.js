@@ -54,7 +54,7 @@
       }
     }
   });
-  Vue.component('User', {
+  Vue.component('user', {
     props: ['id', 'point', 'name'],
     data() {
       return {
