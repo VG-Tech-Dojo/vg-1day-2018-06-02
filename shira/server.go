@@ -89,6 +89,8 @@ func (s *Server) Init(dbconf, env string) error {
 	s.bots = append(s.bots, talkBot)
 	eliteBot := bot.NewEliteBot(s.poster.In)
 	s.bots = append(s.bots, eliteBot)
+	timeBot := bot.NewTimeBot(s.poster.In)
+	s.bots = append(s.bots, timeBot)
 
 	return nil
 }
