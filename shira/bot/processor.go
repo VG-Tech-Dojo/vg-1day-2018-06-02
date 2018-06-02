@@ -37,6 +37,8 @@ type (
 	TalkProcessor struct{}
 
 	EliteProcessor struct{}
+
+	TimeProcessor struct{}
 )
 
 // Process は"hello, world!"というbodyがセットされたメッセージのポインタを返します
@@ -120,8 +122,23 @@ func (p *TalkProcessor) Process(msgIn *model.Message) (*model.Message, error) {
 }
 
 func (p *EliteProcessor) Process(msgIn *model.Message) (*model.Message, error) {
-	// r := regexp.MustCompile("\\A(.*)が食べたい\\z")
+	r := regexp.MustCompile("\\A(.*)がたべたい\\z")
+	matchedStrings := r.FindStringSubmatch(msgIn.Body)
+	text := matchedStrings[1]
+
 	return &model.Message{
-		Body: "店名: 松屋(渋谷店)\nURL:hoge",
+		Body:     "店名: 松屋(渋谷店)\nURL:hoge",
+		Username: text,
+	}, nil
+}
+
+func (p *TimeProcessor) Process(msgIn *model.Message) (*model.Message, error) {
+	r := regexp.MustCompile("\\A(.*)食\\z")
+	matchedStrings := r.FindStringSubmatch(msgIn.Body)
+	text := matchedStrings[1]
+
+	return &model.Message{
+		Body:     "朝にはパンがおすすめ",
+		Username: text,
 	}, nil
 }
