@@ -94,14 +94,32 @@ func (m *Message) Create(c *gin.Context) {
 
 // UpdateByID は...
 func (m *Message) UpdateByID(c *gin.Context) {
-	// Mission 1-1. メッセージを編集しよう
-	// ...
-	c.JSON(http.StatusCreated, gin.H{})
+  var msg model.Message
+
+  if err := c.BindJSON(&msg); err != nil {
+		resp := httputil.NewErrorResponse(err)
+		c.JSON(http.StatusInternalServerError, resp)
+  }
+	updated, err := msg.Update(m.DB)
+  if err != nil {
+    resp := httputil.NewErrorResponse(err)
+    c.JSON(http.StatusBadRequest, resp)
+    return
+  }
+	c.JSON(http.StatusCreated, gin.H{
+    "result": updated,
+    "error": nil,
+  })
 }
 
 // DeleteByID は...
 func (m *Message) DeleteByID(c *gin.Context) {
-	// Mission 1-2. メッセージを削除しよう
-	// ...
+  var msg model.Message
+  _, err := msg.Delete(m.DB, c.Param("id"))
+  if err != nil {
+    resp := httputil.NewErrorResponse(err)
+    c.JSON(http.StatusBadRequest, resp)
+    return
+  }
 	c.JSON(http.StatusOK, gin.H{})
 }
