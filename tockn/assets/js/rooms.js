@@ -44,7 +44,13 @@
     data: {
       rooms: [
         {
-          id: "3",
+          id: "1",
+          name: "namae",
+          image_url: "https://nekogazou.com/wp-content/uploads/2015/03/282e6ed4976b181c78381a609c0f4e32-e1427784795864.jpg",
+          bitrh: "",
+        },
+        {
+          id: "2",
           name: "namae",
           image_url: "https://nekogazou.com/wp-content/uploads/2015/03/282e6ed4976b181c78381a609c0f4e32-e1427784795864.jpg",
           bitrh: "",
@@ -56,24 +62,18 @@
           bitrh: "",
         },
         {
-          id: "3",
+          id: "4",
           name: "namae",
           image_url: "https://nekogazou.com/wp-content/uploads/2015/03/282e6ed4976b181c78381a609c0f4e32-e1427784795864.jpg",
           bitrh: "",
         },
         {
-          id: "3",
-          name: "namae",
-          image_url: "https://nekogazou.com/wp-content/uploads/2015/03/282e6ed4976b181c78381a609c0f4e32-e1427784795864.jpg",
-          bitrh: "",
-        },
-        {
-          id: "3",
+          id: "5",
           name: "namae",
           image_url: "https://nekogazou.com/wp-content/uploads/2015/03/282e6ed4976b181c78381a609c0f4e32-e1427784795864.jpg",
           bitrh: "",
         },{
-          id: "3",
+          id: "6",
           name: "namae",
           image_url: "https://nekogazou.com/wp-content/uploads/2015/03/282e6ed4976b181c78381a609c0f4e32-e1427784795864.jpg",
           bitrh: "",
@@ -84,11 +84,11 @@
       this.getRooms();
     },
     methods: {
-      // getRooms() {
-      //   fetch('/api/rooms').then(response => response.json()).then(data => {
-      //     this.rooms = data.result;
-      //   });
-      // }
+       getRooms() {
+         fetch('/api/rooms').then(response => response.json()).then(data => {
+           this.rooms = data.result;
+         });
+       }
     }
   });
 })();

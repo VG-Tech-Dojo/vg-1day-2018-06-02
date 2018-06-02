@@ -8,6 +8,7 @@ import (
 	"github.com/VG-Tech-Dojo/vg-1day-2018-06-02/tockn/httputil"
 	"github.com/VG-Tech-Dojo/vg-1day-2018-06-02/tockn/model"
 	"github.com/gin-gonic/gin"
+	"strconv"
 )
 
 // Message is controller for requests to messages
@@ -18,7 +19,13 @@ type Message struct {
 
 // All は全てのメッセージを取得してJSONで返します
 func (m *Message) All(c *gin.Context) {
-	msgs, err := model.MessagesAll(m.DB)
+	roomID, err := strconv.ParseInt(c.Param("room_id"), 10, 64)
+	if err != nil {
+		resp := httputil.NewErrorResponse(err)
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+	msgs, err := model.MessagesAll(m.DB, roomID)
 	if err != nil {
 		resp := httputil.NewErrorResponse(err)
 		c.JSON(http.StatusInternalServerError, resp)
@@ -79,6 +86,15 @@ func (m *Message) Create(c *gin.Context) {
 	if msg.Username == "" {
 		msg.Username = "anonymous"
 	}
+
+	roomID, err := strconv.ParseInt(c.Param("room_id"), 10, 64)
+	if err != nil {
+		resp := httputil.NewErrorResponse(err)
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+	msg.RoomID = roomID
 
 	inserted, err := msg.Insert(m.DB)
 	if err != nil {

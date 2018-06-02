@@ -63,13 +63,15 @@
     },
     methods: {
       getMessages() {
-        fetch('/api/messages').then(response => response.json()).then(data => {
+        var roomID = location.href[location.href.length - 1]
+        fetch('/api/rooms/' + roomID + '/messages').then(response => response.json()).then(data => {
           this.messages = data.result;
         });
       },
       sendMessage() {
         const message = this.newMessage;
-        fetch('/api/messages', {
+        var roomID = location.href[location.href.length - 1]
+        fetch('/api/rooms/' + roomID + '/messages', {
           method: 'POST',
           body: JSON.stringify(message)
         })
@@ -87,7 +89,7 @@
           });
       },
       removeMessage(id) {
-        return fetch(`/api/messages/${id}`, {
+        return fetch('/api/rooms/' + roomID + '/messages/${id}', {
           method: 'DELETE'
         })
         .then(response => response.json())
@@ -102,7 +104,7 @@
         })
       },
       updateMessage(updatedMessage) {
-        return fetch(`/api/messages/${updatedMessage.id}`, {
+        return fetch(`/api/rooms/3/messages/${updatedMessage.id}`, {
           method: 'PUT',
           body: JSON.stringify(updatedMessage),
         })
