@@ -14,10 +14,10 @@ type Message struct {
 }
 
 // MessagesAll は全てのメッセージを返します
-func MessagesAll(db *sql.DB) ([]*Message, error) {
+func MessagesAll(db *sql.DB, roomID int64) ([]*Message, error) {
 
 	// Tutorial 1-2. ユーザー名を表示しよう
-	rows, err := db.Query(`select id, body, username, room_id from message`)
+	rows, err := db.Query(`select id, body, username, room_id from message where room_id = ?`, roomID)
 	if err != nil {
 		return nil, err
 	}
