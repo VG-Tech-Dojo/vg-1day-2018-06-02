@@ -148,8 +148,11 @@ func (p *TimeProcessor) Process(msgIn *model.Message) (*model.Message, error) {
 			case "昼":
 				foods = "吉野家"
 			case "夜":
-				foods = "牛角"
+				foods = "焼肉キング"
 			}
+
+			query :=
+			query = fmt.Sprintf(query, "&", foods)
 	*/
 	// 検索
 
