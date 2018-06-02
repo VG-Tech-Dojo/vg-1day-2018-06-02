@@ -68,7 +68,7 @@ func (s *Server) Init(dbconf, env string) error {
 	api.GET("/rooms/:room_id/messages/:id", mctr.GetByID)
 	api.POST("/rooms/:room_id/messages", mctr.Create)
 	api.PUT("/rooms/:room_id/messages/:id", mctr.UpdateByID)
-	api.DELETE("rooms/:room_id/messages/:id", mctr.DeleteByID)
+	api.DELETE("/rooms/:room_id/messages/:id", mctr.DeleteByID)
 	// bot
 	mc := bot.NewMulticaster(msgStream)
 	s.multicaster = mc
