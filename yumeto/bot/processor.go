@@ -14,7 +14,7 @@ import (
 const (
 	keywordAPIURLFormat = "https://jlp.yahooapis.jp/KeyphraseService/V1/extract?appid=%s&sentence=%s&output=json"
 	TextsearchAPIURLFormat = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=%s&key=%s"
-	NearbyAPIURLFormat = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s,%s&keyword=%s&rankby=distance&key=%s"
+	NearbyAPIURLFormat = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?language=ja&location=%f,%f&keyword=%s&rankby=distance&key=%s"
 )
 
 type (
@@ -116,9 +116,9 @@ func (p *JiroProcessor) Process(msgIn *model.Message) (*model.Message, error) {
 	matchedStrings := r.FindStringSubmatch(msgIn.Body)
 	placeName := matchedStrings[1]
 
-	url := fmt.Sprintf(TextsearchAPIURLFormat, url.QueryEscape(placeName), env.PlacesAPIKey)
+	textSearchAPIURL := fmt.Sprintf(TextsearchAPIURLFormat, url.QueryEscape(placeName), env.PlacesAPIKey)
 
-	type TextsearchAPIResponse struct {
+	type PlacesAPIResponse struct {
 		HTMLAttributions []interface{} `json:"html_attributions"`
 		NextPageToken    string        `json:"next_page_token"`
 		Results          []struct {
@@ -160,16 +160,21 @@ func (p *JiroProcessor) Process(msgIn *model.Message) (*model.Message, error) {
 		} `json:"results"`
 		Status string `json:"status"`
 	}
-	var res TextsearchAPIResponse
+	var textSearchRes PlacesAPIResponse
 
-	get(url, &res)
+	get(textSearchAPIURL, &textSearchRes)
 
-	lat := res.Results[0].Geometry.Location.Lat
-	lng := res.Results[0].Geometry.Location.Lng
+	lat := textSearchRes.Results[0].Geometry.Location.Lat
+	lng := textSearchRes.Results[0].Geometry.Location.Lng
 
-	fmt.Printf("%f, %f", lat, lng)
+	nearbyAPIURL := fmt.Sprintf(NearbyAPIURLFormat, lat, lng, url.QueryEscape("\"ラーメン二郎\""), env.PlacesAPIKey)
+	var nearbyRes PlacesAPIResponse
+
+	get(nearbyAPIURL, &nearbyRes)
+
+	branchName := nearbyRes.Results[0].Name
 
 	return &model.Message{
-		Body: "jiro",
+		Body: branchName,
 	}, nil
 }
