@@ -59,15 +59,16 @@ func (p *OmikujiProcessor) Process(msgIn *model.Message) (*model.Message, error)
 }
 
 func (p *GachaProcessor) Process(msgIn *model.Message) (*model.Message, error) {
-	fortunes := []string{
+	gacha := []string{
 		"SSレア",
 		"Sレア",
 		"レア",
 		"ノーマル",
 	}
-	result := fortunes[randIntn(len(fortunes))]
+	result := gacha[randIntn(len(gacha))]
 	return &model.Message{
 		Body: result,
+		User: "gachabot",
 	}, nil
 }
 

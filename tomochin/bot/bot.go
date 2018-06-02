@@ -70,9 +70,7 @@ func NewHelloWorldBot(out chan *model.Message) *Bot {
 // NewGachaBot は"SSレア", "Sレア", "レア", "ノーマル"のいずれかをランダムで返す新しいBotの構造体のポインタを返します
 func NewGachaBot(out chan *model.Message) *Bot {
 	in := make(chan *model.Message)
-
 	checker := NewRegexpChecker("\\Agacha\\z")
-
 	processor := &GachaProcessor{}
 
 	return &Bot{
