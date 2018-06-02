@@ -76,6 +76,10 @@ func (m *Message) Create(c *gin.Context) {
 	// Tutorial 1-2. ユーザー名を追加しよう
 	// できる人は、ユーザー名が空だったら`anonymous`等適当なユーザー名で投稿するようにしてみよう
 
+	if msg.UserName == "" {
+		msg.UserName = "anonymous"
+	}
+
 	inserted, err := msg.Insert(m.DB)
 	if err != nil {
 		resp := httputil.NewErrorResponse(err)
@@ -96,7 +100,23 @@ func (m *Message) Create(c *gin.Context) {
 func (m *Message) UpdateByID(c *gin.Context) {
 	// Mission 1-1. メッセージを編集しよう
 	// ...
-	c.JSON(http.StatusCreated, gin.H{})
+	var msg model.Message
+
+	if err := c.BindJSON(&msg); err != nil {
+		resp := httputil.NewErrorResponse(err)
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+	err := msg.Update(m.DB)
+
+	if err != nil{
+		resp := httputil.NewErrorResponse(err)
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{})
 }
 
 // DeleteByID は...
