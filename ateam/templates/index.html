@@ -25,13 +25,13 @@
     </div>
     <div class="row">
       <label>
-        <input type="radio" value="0">A
+        <input type="radio" value="0" v-model="newMessage.body">A
       </label>
       <label>
-        <input type="radio" value="1">B
+        <input type="radio" value="1" v-model="newMessage.body">B
       </label>
       <label>
-        <input type="radio" value="0">C
+        <input type="radio" value="0" v-model="newMessage.body">C
       </label>
       <button class="button-primary" v-on:click="sendMessage"></button>
     </div>
