@@ -38,7 +38,7 @@ func (m *Message) All(c *gin.Context) {
 
 // GetByID はパラメーターで受け取ったidのメッセージを取得してJSONで返します
 func (m *Message) GetByID(c *gin.Context) {
-	msg, err := model.MessageByID(m.DB, c.Param("id"))
+	msg, err := model.MessageByID(m.DB, c.Param("room_id"), c.Param("id"))
 
 	switch {
 	case err == sql.ErrNoRows:
@@ -99,7 +99,7 @@ func (m *Message) Create(c *gin.Context) {
 // UpdateByID は...
 func (m *Message) UpdateByID(c *gin.Context) {
 	// Mission 1-1. メッセージを編集しよう
-	msg, err := model.MessageByID(m.DB, c.Param("id"))
+	msg, err := model.MessageByID(m.DB, c.Param("room_id"), c.Param("id"))
 	if err != nil {
 		resp := httputil.NewErrorResponse(err)
 		c.JSON(http.StatusInternalServerError, resp)
@@ -130,7 +130,7 @@ func (m *Message) UpdateByID(c *gin.Context) {
 // DeleteByID は...
 func (m *Message) DeleteByID(c *gin.Context) {
 	// Mission 1-2. メッセージを削除しよう
-	err := model.Delete(m.DB, c.Param("id"))
+	err := model.Delete(m.DB, c.Param("room_id"), c.Param("id"))
 	if err != nil {
 		resp := httputil.NewErrorResponse(err)
 		c.JSON(http.StatusInternalServerError, resp)
