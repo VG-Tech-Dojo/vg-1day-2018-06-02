@@ -30,7 +30,7 @@
         <span class="action-button u-pull-right" v-on:click="remove">&#10007;</span>
       </div>
     </div>
-  `,
+    `,
     methods: {
       remove() {
         this.removeMessage(this.id)
@@ -44,7 +44,7 @@
         this.editedBody = null
       },
       doneEdit() {
-        this.updateMessage({id: this.id, body: this.editedBody})
+        this.updateMessage({id: this.id, body: this.editedBody, username: this.username})
           .then(response => {
             this.cancelEdit()
           })

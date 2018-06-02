@@ -6,8 +6,9 @@ import (
 
 // Message はメッセージの構造体です
 type Message struct {
-	ID   int64  `json:"id"`
-	Body string `json:"body"`
+	ID       int64  `json:"id"`
+	Body     string `json:"body"`
+	Username string `json:"username"`
 	// Tutorial 1-2. ユーザー名を表示しよう
 }
 
@@ -15,7 +16,7 @@ type Message struct {
 func MessagesAll(db *sql.DB) ([]*Message, error) {
 
 	// Tutorial 1-2. ユーザー名を表示しよう
-	rows, err := db.Query(`select id, body from message`)
+	rows, err := db.Query(`select id, body, Username from message`)
 	if err != nil {
 		return nil, err
 	}
@@ -25,7 +26,7 @@ func MessagesAll(db *sql.DB) ([]*Message, error) {
 	for rows.Next() {
 		m := &Message{}
 		// Tutorial 1-2. ユーザー名を表示しよう
-		if err := rows.Scan(&m.ID, &m.Body); err != nil {
+		if err := rows.Scan(&m.ID, &m.Body, &m.Username); err != nil {
 			return nil, err
 		}
 		ms = append(ms, m)
@@ -70,6 +71,24 @@ func (m *Message) Insert(db *sql.DB) (*Message, error) {
 
 // Mission 1-1. メッセージを編集しよう
 // ...
+func (m *Message) Update(db *sql.DB) error {
+	// Tutorial 1-2. ユーザー名を追加しよう
+	_, err := db.Exec(`update message set body = ? where id = ?`, m.Body, m.ID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 
 // Mission 1-2. メッセージを削除しよう
+
+// Tutorial 1-2. ユーザー名を追加しよう
+func DeleteMessage(db *sql.DB, id int64) error {
+	if _, err := db.Exec(`delete from message where id = ?`, id); err != nil {
+		return err
+	}
+	return nil
+}
+
 // ...
