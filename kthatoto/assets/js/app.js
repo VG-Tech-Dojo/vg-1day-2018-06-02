@@ -44,7 +44,7 @@
         this.editedBody = null
       },
       doneEdit() {
-        this.updateMessage({id: this.id, body: this.editedBody})
+        this.updateMessage({id: this.id, body: this.editedBody, username: this.username})
           .then(response => {
             this.cancelEdit()
           })
@@ -93,6 +93,7 @@
         .then(response => response.json())
         .then(response => {
           if (response.error) {
+            console.log(response.error)
             alert(response.error.message);
             return;
           }
