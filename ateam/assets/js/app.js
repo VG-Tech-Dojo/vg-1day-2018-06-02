@@ -1,9 +1,16 @@
 (function() {
   'use strict';
   const Message = function() {
-    this.body = ''
-    this.username = ''
+    this.body = '';
+    this.username = '';
+    this.userid = '';
+    this.type = '';
   };
+  const User = function() {
+    this.id = '';
+    this.name = '';
+    this.point = '';
+  }
 
   Vue.component('message', {
     // Tutorial 1-2. ユーザー名を表示しよう
