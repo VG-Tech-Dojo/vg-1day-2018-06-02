@@ -14,6 +14,7 @@ import (
 
 const (
 	keywordAPIURLFormat = "https://jlp.yahooapis.jp/KeyphraseService/V1/extract?appid=%s&sentence=%s&output=json"
+	talkAPIURL          = "https://api.a3rt.recruit-tech.co.jp/talk/v1/smalltalk"
 )
 
 type (
@@ -32,6 +33,8 @@ type (
 
 	// KeywordProcessor はメッセージ本文からキーワードを抽出するprocessorの構造体です
 	KeywordProcessor struct{}
+
+	TalkProcessor struct{}
 )
 
 // Process は"hello, world!"というbodyがセットされたメッセージのポインタを返します
@@ -92,5 +95,24 @@ func (p *KeywordProcessor) Process(msgIn *model.Message) (*model.Message, error)
 
 	return &model.Message{
 		Body: "キーワード：" + strings.Join(keywords, ", "),
+	}, nil
+}
+
+func (p *TalkProcessor) Process(msgIn *model.Message) (*model.Message, error) {
+	r := regexp.MustCompile("\\Atalk (.*)\\z")
+	matchedStrings := r.FindStringSubmatch(msgIn.Body)
+	text := matchedStrings[1]
+
+	values := url.Values{}
+	values.Add("apikey", env.TalkAPIKey)
+	values.Add("query", url.QueryEscape(text))
+
+	type talkAPIResponse map[string]interface{}
+	var json talkAPIResponse
+	post(talkAPIURL, values, &json)
+
+	fmt.Println(json["results"])
+	return &model.Message{
+		Body: "OK",
 	}, nil
 }
