@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="jp">
+
+<head>
+    <meta charset="UTF-8">
+    <title>vg-1day-2018-06-02</title>
+    <link rel="stylesheet" href="../assets/css/bootstrap.css" />
+</head>
+
+<body>
+    <div id="app" class="container" style="text-align: center">
+        <header style="background-color: cadetblue;
+        margin-top: 30px; text-align: center">
+            HEADER
+        </header>
+        <div class="row">
+            <div class="col">
+
+            </div>
+        </div>
+        <div class="row">
+            <room v-for="room in rooms" :data="room" :key="room.id"></room>
+        </div>
+    </div>
+
+    <script src="/assets/js/vue.js"></script>
+    <script src="/assets/js/whatwg-fetch.js"></script>
+    <script src="/assets/js/rooms.js"></script>
+</body>
+
+</html>
