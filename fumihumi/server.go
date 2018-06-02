@@ -64,11 +64,11 @@ func (s *Server) Init(dbconf, env string) error {
 
 	msgStream := make(chan *model.Message)
 	mctr := &controller.Message{DB: db, Stream: msgStream}
-	api.GET("/rooms/:id/messages", mctr.All)
-	api.GET("/rooms/:id/messages/:id", mctr.GetByID)
-	api.POST("/rooms/:id/messages", mctr.Create)
-	api.PUT("/rooms/:id/messages/:id", mctr.UpdateByID)
-	api.DELETE("/rooms/:id/messages/:id", mctr.DeleteByID)
+	api.GET("/rooms/:room_id/messages", mctr.All)
+	api.GET("/rooms/:room_id/messages/:id", mctr.GetByID)
+	api.POST("/rooms/:room_id/messages", mctr.Create)
+	api.PUT("/rooms/:room_id/messages/:id", mctr.UpdateByID)
+	api.DELETE("/rooms/:room_id/messages/:id", mctr.DeleteByID)
 	// bot
 	mc := bot.NewMulticaster(msgStream)
 	s.multicaster = mc
