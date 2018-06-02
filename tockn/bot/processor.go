@@ -13,6 +13,7 @@ import (
 
 const (
 	keywordAPIURLFormat = "https://jlp.yahooapis.jp/KeyphraseService/V1/extract?appid=%s&sentence=%s&output=json"
+	talkAPIURLFormat    = "https://api.a3rt.recruit-tech.co.jp/talk/v1/smalltalk"
 )
 
 type (
@@ -31,6 +32,8 @@ type (
 	KeywordProcessor struct{}
 
 	GachaProcessor struct{}
+
+	TalkProcessor struct{}
 )
 
 // Process は"hello, world!"というbodyがセットされたメッセージのポインタを返します
@@ -91,5 +94,31 @@ func (p *GachaProcessor) Process(msgIn *model.Message) (*model.Message, error) {
 	result := fortunes[randIntn(len(fortunes))]
 	return &model.Message{
 		Body: result,
+	}, nil
+}
+
+func (p *TalkProcessor) Process(msgIn *model.Message) (*model.Message, error) {
+	r := regexp.MustCompile("\\Atalk (.*)\\z")
+	matchedStrings := r.FindStringSubmatch(msgIn.Body)
+	text := matchedStrings[1]
+
+	v := url.Values{}
+	v.Set("apikey", env.TalkAPIKey)
+	v.Set("query", url.QueryEscape(text))
+
+	type talkAPIResponse struct {
+		Status  int    `json:"status"`
+		Message string `json:"message"`
+		Results []struct {
+			Perplexity float64 `json:"perplexity"`
+			Reply      string  `json:"reply"`
+		} `json:"results"`
+	}
+	var json talkAPIResponse
+	post(talkAPIURLFormat, v, &json)
+
+	return &model.Message{
+		Body:     json.Results[0].Reply,
+		Username: "Talk API",
 	}, nil
 }
