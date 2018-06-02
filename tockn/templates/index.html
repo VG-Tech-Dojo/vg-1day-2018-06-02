@@ -3,30 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <title>vg-1day-2018-06-02</title>
-  <link rel="stylesheet" href="/assets/css/skeleton.css" />
+  <!-- <link rel="stylesheet" href="/assets/css/skeleton.css" /> -->
   <link rel="stylesheet" href="/assets/css/app.css" />
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
 </head>
 <body>
   <div id="app" class="container">
     <div class="row">
-      <h5>メッセージアプリ</h5>
+      <h5 class="title">メッセージアプリ</h5>
     </div>
-    <div class="row">
-      <!-- Tutorial 1-2. ユーザー名を表示しよう -->
-      <div class="message-list" v-for="message in messages">
-        <message
-          :id="message.id"
-          :body="message.body"
-          :username="message.username"
-          :remove-message="removeMessage"
-          :update-message="updateMessage"
-        ></message>
+    <div class="d-flex">
+      <div class="d-flex flex-column">
+        <div class="card" style="width: 18rem;">
+          <img class="card-img-top" src="https://img.barks.jp/image/review/1000147521/001.jpg" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">乃木坂</h5>
+            <a href="http://localhost:8080/" class="btn btn-primary">他のページを見る</a>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <textarea class="u-full-width" v-model="newMessage.body" placeholder="メッセージ"></textarea>
-      <input type="text" class="u-full-width" v-model="newMessage.username" placeholder="ユーザー名">
-      <button class="button-primary" v-on:click="sendMessage">Send</button>
+        <div class="message-list m-3" v-for="message in messages">
+          <message
+            :id="message.id"
+            :body="message.body"
+            :username="message.username"
+            :remove-message="removeMessage"
+            :update-message="updateMessage"
+          ></message>
+        </div>
+      <div class="form-group m-2 col-sm-6 col-10">
+        <textarea class="u-full-width form-control" v-model="newMessage.body" placeholder="メッセージ"></textarea>
+        <input type="text" class="u-full-width form-control" v-model="newMessage.username" placeholder="ユーザー名">
+        <button class="btn btn-sm btn-primary" v-on:click="sendMessage">Send</button>
+      </div>
     </div>
   </div>
 
