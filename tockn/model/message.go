@@ -54,7 +54,7 @@ func MessageByID(db *sql.DB, roomID, id string) (*Message, error) {
 // Insert はmessageテーブルに新規データを1件追加します
 func (m *Message) Insert(db *sql.DB) (*Message, error) {
 	// Tutorial 1-2. ユーザー名を追加しよう
-	res, err := db.Exec(`insert into message (body, username, room_id) values (?, ?, ?)`, m.Body, m.Username)
+	res, err := db.Exec(`insert into message (body, username, room_id) values (?, ?, ?)`, m.Body, m.Username, m.RoomID)
 	if err != nil {
 		return nil, err
 	}
