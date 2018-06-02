@@ -69,7 +69,8 @@
     el: '#app',
     data: {
       messages: [],
-      newMessage: new Message()
+      newMessage: new Message(),
+      user: undefined,
     },
     created() {
       this.getMessages();
@@ -82,7 +83,14 @@
         });
       },
       getUserInfo(){
-        console.log("GET USER INFO API PLACEHOLDER");
+        fetch('/api/user').then(response => response.json()).then(data => {
+          this.user = {
+            id: 1,
+            point: 0,
+            name: 'TEST_NAME'
+          };
+          // this.user = data.result;
+        });
       },
       sendMessage() {
         const message = this.newMessage;
