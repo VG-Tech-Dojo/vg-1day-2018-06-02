@@ -39,7 +39,8 @@ func (b *Bot) Run(ctx context.Context) {
 				if err != nil {
 					log.Printf("%s: %#v\n", b.name, err)
 					b.out <- &model.Message{
-						Body: "気が乗らないパカ",
+						Body:     "気が乗らないパカ",
+						Username: "jewelpet",
 					}
 					// selectから抜ける
 					break
@@ -108,6 +109,20 @@ func NewGachaBot(out chan *model.Message) *Bot {
 
 	return &Bot{
 		name:      "gachabot",
+		in:        in,
+		out:       out,
+		checker:   checker,
+		processor: processor,
+	}
+}
+
+func NewTalkBot(out chan *model.Message) *Bot {
+	in := make(chan *model.Message)
+	checker := NewRegexpChecker("\\Atalk .+")
+	processor := &TalkProcessor{}
+
+	return &Bot{
+		name:      "talkbot",
 		in:        in,
 		out:       out,
 		checker:   checker,
