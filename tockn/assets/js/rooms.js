@@ -1,9 +1,5 @@
 (function () {
   'use strict';
-  const Message = function () {
-    this.body = ''
-    this.username = ''
-  };
 
   Vue.component('room', {
     props: {
@@ -23,18 +19,18 @@
 
     template: `
     <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" v-bind:src="data.image_url" alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ data.name }}</h5>
-                        <p class="card-text">{{ data.birth }}</p>
-                        <a v-bind:href="'./rooms/' + data.id" class="btn btn-primary">部屋に入る</a>
-                    </div>
-                </div>
-            </div>
+      <div class="card" style="width: 18rem;">
+        <img class="card-img-top" v-bind:src="data.image_url" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">{{ data.name }}</h5>
+            <p class="card-text">{{ data.birth }}</p>
+           <a v-bind:href="'./rooms/' + data.id" class="btn btn-primary">部屋に入る</a>
+        </div>
+      </div>
+    </div>
   `,
   mounted(){
-    console.log(this.data);
+    
   },
     methods: {
       remove() {
@@ -88,11 +84,11 @@
       this.getRooms();
     },
     methods: {
-      getRooms() {
-        // fetch('/api/rooms').then(response => response.json()).then(data => {
-        //   this.rooms = data.result;
-        // });
-      }
+      // getRooms() {
+      //   fetch('/api/rooms').then(response => response.json()).then(data => {
+      //     this.rooms = data.result;
+      //   });
+      // }
     }
   });
 })();

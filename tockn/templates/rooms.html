@@ -3,21 +3,16 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>vg-1day-2018-06-02</title>
-    <link rel="stylesheet" href="../assets/css/bootstrap.css" />
+    <title>Rooms</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 </head>
 
 <body>
     <div id="app" class="container" style="text-align: center">
         <header style="background-color: cadetblue;
         margin-top: 30px; text-align: center">
-            HEADER
+            イイ動画チャット
         </header>
-        <div class="row">
-            <div class="col">
-
-            </div>
-        </div>
         <div class="row">
             <room v-for="room in rooms" :data="room" :key="room.id"></room>
         </div>
