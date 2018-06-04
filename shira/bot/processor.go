@@ -35,6 +35,8 @@ type (
 	KeywordProcessor struct{}
 
 	TalkProcessor struct{}
+
+	EliteProcessor struct{}
 )
 
 // Process は"hello, world!"というbodyがセットされたメッセージのポインタを返します
@@ -114,5 +116,12 @@ func (p *TalkProcessor) Process(msgIn *model.Message) (*model.Message, error) {
 	fmt.Println(json["results"])
 	return &model.Message{
 		Body: "OK",
+	}, nil
+}
+
+func (p *EliteProcessor) Process(msgIn *model.Message) (*model.Message, error) {
+	// r := regexp.MustCompile("\\A(.*)が食べたい\\z")
+	return &model.Message{
+		Body: "店名: 松屋(渋谷店)\nURL:hoge",
 	}, nil
 }
