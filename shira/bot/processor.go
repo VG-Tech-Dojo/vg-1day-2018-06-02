@@ -15,6 +15,8 @@ import (
 const (
 	keywordAPIURLFormat = "https://jlp.yahooapis.jp/KeyphraseService/V1/extract?appid=%s&sentence=%s&output=json"
 	talkAPIURL          = "https://api.a3rt.recruit-tech.co.jp/talk/v1/smalltalk"
+	foodAPIURL          = "https://webservice.recruit.co.jp/hotpepper/gourmet/v1/"
+  freewordAPIURLFormat = "https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=%s&keyword=%s&middle_area=Y030&format=json"
 )
 
 type (
@@ -35,6 +37,10 @@ type (
 	KeywordProcessor struct{}
 
 	TalkProcessor struct{}
+
+	EliteProcessor struct{}
+
+	TimeProcessor struct{}
 )
 
 // Process は"hello, world!"というbodyがセットされたメッセージのポインタを返します
@@ -114,5 +120,72 @@ func (p *TalkProcessor) Process(msgIn *model.Message) (*model.Message, error) {
 	fmt.Println(json["results"])
 	return &model.Message{
 		Body: "OK",
+	}, nil
+}
+
+func (p *EliteProcessor) Process(msgIn *model.Message) (*model.Message, error) {
+	r := regexp.MustCompile("\\A(.*)がたべたい\\z")
+	matchedStrings := r.FindStringSubmatch(msgIn.Body)
+	text := matchedStrings[1]
+
+	url := fmt.Sprintf(freewordAPIURLFormat, env.HotPapperAPI, url.QueryEscape(text))
+
+	type freewordAPIResponse map[string]interface{}
+	var json freewordAPIResponse
+	get(url, &json)
+
+	// var name string
+	resluts := json["results"]
+	name := resluts.(map[string]interface{})["shop"].([]interface{})[0].(map[string]interface{})["name"].(string)
+	shopurl := resluts.(map[string]interface{})["shop"].([]interface{})[0].(map[string]interface{})["open"].(string)
+
+	fmt.Println(shopurl)
+	fmt.Println(name)
+
+	return &model.Message{
+		Body:     name,
+		Username: shopurl,
+	}, nil
+}
+
+func (p *TimeProcessor) Process(msgIn *model.Message) (*model.Message, error) {
+	/*	r := regexp.MustCompile("\\A(.*)食\\z")
+		matchedStrings := r.FindStringSubmatch(msgIn.Body)
+		text := matchedStrings[1]
+
+
+			var foods string
+
+			// 朝、昼、夜
+			switch text {
+			case "朝":
+				foods = "朝食"
+			case "昼":
+				foods = "吉野家"
+			case "夜":
+				foods = "焼肉キング"
+			}
+
+			query :=
+			query = fmt.Sprintf(query, "&", foods)
+	*/
+	// 検索
+
+	// JSONパース
+	type Response struct {
+		Shop struct {
+			Name string `json:"name"`
+			Url  string `json:"urls"`
+		}
+	}
+
+	var res Response
+
+	res.Shop.Name = "吉野家"
+	res.Shop.Url = "https://www.yoshinoya.com/"
+
+	return &model.Message{
+		Body:     res.Shop.Url,
+		Username: res.Shop.Name,
 	}, nil
 }

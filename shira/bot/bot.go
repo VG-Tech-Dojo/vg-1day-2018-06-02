@@ -134,3 +134,38 @@ func NewKeywordBot(out chan *model.Message) *Bot {
 		processor: processor,
 	}
 }
+
+//食べたいbot
+func NewEliteBot(out chan *model.Message) *Bot {
+	in := make(chan *model.Message)
+
+	checker := NewRegexpChecker("\\A.*がたべたい")
+
+	processor := &EliteProcessor{}
+
+	return &Bot{
+		name:      "elitebot",
+		in:        in,
+		out:       out,
+		checker:   checker,
+		processor: processor,
+	}
+}
+
+//時間bot
+//食べたいbot
+func NewTimeBot(out chan *model.Message) *Bot {
+	in := make(chan *model.Message)
+
+	checker := NewRegexpChecker("\\A.*食$")
+
+	processor := &TimeProcessor{}
+
+	return &Bot{
+		name:      "timebot",
+		in:        in,
+		out:       out,
+		checker:   checker,
+		processor: processor,
+	}
+}
